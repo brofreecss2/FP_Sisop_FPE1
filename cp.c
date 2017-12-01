@@ -5,6 +5,11 @@
 
 char buf[1024];
 
+/*
+Checklist
+- belom bisa kalau langsung copy ke direktori
+*/
+
 int main(int argc, char *argv[])
 {
 	int fd0, fd1, n;
@@ -18,7 +23,7 @@ int main(int argc, char *argv[])
 		printf(1,"cp: cannot open %s\n",argv[1]);
 		exit();
 	}
-	if((fd1 = open(argv[2],O_CREATE | O_RDWR)) < 0){
+	if((fd1 = open(argv[2], O_CREATE | O_WRONLY)) < 0){
 		printf(1,"cp: cannot open %s\n",argv[2]);
 		exit();
 	}
