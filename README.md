@@ -2,7 +2,7 @@
 
 - cd ✓
 - cp (parsial, kurang cp direktori)
-- env (belom bener)
+- env ✓
 - find
 - ls
 - mv (parsial, kurang mv direktori)
