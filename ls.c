@@ -73,7 +73,9 @@ int main(int argc, char *argv[])
 	}
 	else{
 		for(int i=1;i<argc;++i){
+			printf(1,"directory: %s\n",argv[i]);
 			ls(argv[i]);
+			if(i!=argc-1)printf(1,"\n");
 		}
 	}
 	exit();
