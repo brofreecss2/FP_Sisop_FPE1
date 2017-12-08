@@ -4,6 +4,11 @@
 #include "fcntl.h"
 #include "fs.h"
 
+/*
+Checklist
+- handle file dalam folder (rekursif?)
+*/
+
 int main(int argc, char *argv[]){
   int i;
 
