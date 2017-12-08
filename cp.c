@@ -2,29 +2,35 @@
 #include "stat.h"
 #include "user.h"
 #include "fcntl.h"
+#include "fs.h"
 
 char buf[1024];
 
-/*
-Checklist
-- belom bisa kalau langsung copy ke direktori
-*/
 
-int main(int argc, char *argv[])
-{
-	int fd0, fd1, n;
+char *backname(char *path){
+	char *p;
 
-	if(argc<=2){
-		printf(1,"Need 2 arguments!\n");
+	for(p = path + strlen(path);p>=path && *p != '/';p--);
+	p++;
+
+	return p;
+}
+
+char *strcat_hehe(char *dest,char *src){
+	char *rdest = dest;
+	while(*dest) dest++;
+	while((*dest++ = *src++));
+	return rdest;
+}
+
+int copyfiles(char *src,char *dst){
+	int fd0,fd1,n;
+	if((fd0 = open(src,O_RDONLY)) < 0){
+		printf(1,"cp: cannot open %s\n",src);
 		exit();
 	}
-	
-	if((fd0 = open(argv[1],O_RDONLY)) < 0){
-		printf(1,"cp: cannot open %s\n",argv[1]);
-		exit();
-	}
-	if((fd1 = open(argv[2], O_CREATE | O_WRONLY)) < 0){
-		printf(1,"cp: cannot open %s\n",argv[2]);
+	if((fd1 = open(dst, O_CREATE | O_WRONLY)) < 0){
+		printf(1,"cp: cannot open %s\n",dst);
 		exit();
 	}
 
@@ -33,6 +39,65 @@ int main(int argc, char *argv[])
 	}
 	close(fd0);
 	close(fd1);
+	return 0;
+}
+
+int main(int argc, char *argv[])
+{
+	if(argc<=2){
+		printf(1,"Need 2 arguments!\n");
+		exit();
+	}
+
+	char awal[1024] ;
+	strcpy(awal,argv[argc-2]);
+	char akhir[1024];
+	strcpy(akhir,argv[argc-1]);
+
+//	printf(1,"%s %s\n",backname(argv[argc-2]),argv[argc-1]);
+
+	int o1,o2;
+	//struct dirent d1,d2;
+	struct stat st1,st2;
+
+	if((o1 = open(argv[argc-2],0)) < 0){
+		printf(2,"cp: cannot open '%s'\n",argv[argc-2]);
+		exit();
+	}
+	if(fstat(o1,&st1) < 0){
+		printf(2,"cp: cannot open '%s'\n",argv[argc-2]);
+		close(o1);
+		exit();
+	}
+
+	if((o2 = open(argv[argc-1],0)) < 0){
+		printf(2,"cp: cannot open '%s'\n",argv[argc-1]);
+		close(o1);
+		exit();
+	}
+	if(fstat(o2,&st2) < 0){
+		printf(2,"cp: cannot open '%s'\n",argv[argc-1]);
+		close(o1);
+		close(o2);
+		exit();
+	}
+
+
+	if(st1.type == T_FILE && st2.type == T_FILE){
+		close(o1);
+		close(o2);
+		copyfiles(awal,akhir);
+	} // sama-sama file
+
+	else if(st1.type == T_FILE && st2.type == T_DIR){
+		close(o1);
+		close(o2);
+
+		char *new_dest = strcat_hehe(argv[argc-1],"/");
+		new_dest = strcat_hehe(new_dest,backname(argv[argc-2]));
+		copyfiles(awal,new_dest);
+	}
+	
 	exit();
 
 
