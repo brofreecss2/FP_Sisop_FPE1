@@ -4,9 +4,6 @@
 #include "fcntl.h"
 #include "fs.h"
 
-char buf[1024];
-
-
 char *backname(char *path){
 	char *p;
 
@@ -25,6 +22,7 @@ char *strcat_hehe(char *dest,char *src){
 
 int copyfiles(char *src,char *dst){
 	int fd0,fd1,n;
+	char buf[1024];
 	if((fd0 = open(src,O_RDONLY)) < 0){
 		printf(1,"cp: cannot open %s\n",src);
 		exit();
@@ -83,13 +81,13 @@ int main(int argc, char *argv[])
 	}
 
 
-	if(st1.type == T_FILE && st2.type == T_FILE){
+	if(st1.type == T_FILE && st2.type == T_FILE){ // sama-sama file
 		close(o1);
 		close(o2);
 		copyfiles(awal,akhir);
-	} // sama-sama file
+	} 
 
-	else if(st1.type == T_FILE && st2.type == T_DIR){
+	else if(st1.type == T_FILE && st2.type == T_DIR){ // file dan folder
 		close(o1);
 		close(o2);
 
@@ -97,8 +95,39 @@ int main(int argc, char *argv[])
 		new_dest = strcat_hehe(new_dest,backname(argv[argc-2]));
 		copyfiles(awal,new_dest);
 	}
-	
+
+	else if(st1.type == T_DIR && st2.type == T_DIR){
+		struct dirent de;
+		close(o2);
+		char buf[1024];
+
+		if(strlen(awal) + 1 + DIRSIZ + 1 > sizeof buf){
+			printf(1,"cp: path too long\n");
+			exit();
+		}
+		strcpy(buf,awal);
+		char *p = buf+strlen(buf);
+		*p++ = '/';
+		int cnt = 0;
+		while(read(o1,&de,sizeof (de)) == sizeof (de)){
+			if(de.inum == 0)continue;
+			memmove(p,de.name,DIRSIZ);
+			p[DIRSIZ] = 0;
+			if(stat(buf,&st1) < 0){
+				printf(2,"cp: cannot stat '%s'\n",buf);
+				continue;
+			}
+
+			cnt++;
+			if(cnt <= 2)continue;
+
+			char *new_dest = strcat_hehe(argv[argc-1],"/");
+			new_dest = strcat_hehe(new_dest,backname(buf));
+			//printf(1,"%s %s\n",buf,new_dest);
+			copyfiles(buf,new_dest);
+		}
+		close(o1);
+		exit();
+	}
 	exit();
-
-
 }
