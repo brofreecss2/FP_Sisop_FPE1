@@ -59,8 +59,6 @@ int main(int argc, char *argv[])
 	int o1,o2;
 	//struct dirent d1,d2;
 	struct stat st1,st2;
-	
-	// kalau bukan direktori, langsung panggil
 	if(awal[m-1]!='/' && akhir[n-1]!='/'){
 		copyfiles(awal,akhir);
 		exit();
@@ -104,6 +102,10 @@ int main(int argc, char *argv[])
 		close(o2);
 		char *buf = (char*) malloc (1024 * sizeof(char));
 
+//		if(strlen(awal)+1 > sizeof(buf)){
+//			printf(1,"cp: path too long\n");
+//			exit();
+//		}
 		strcpy(buf,awal);
 		char *p = buf+strlen(buf);
 		*p++ = '/';
