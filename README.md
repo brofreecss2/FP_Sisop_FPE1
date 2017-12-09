@@ -1,11 +1,11 @@
 # FP_Sisop_FPE1
 
 - cd ✓
-- cp (parsial, kurang cp direktori)
+- cp ✓
 - env ✓
 - find ✓
 - ls ✓
-- mv (parsial, kurang mv direktori)
+- mv ✓
 - rm ✓
 - tee ✓
 - touch ✓
