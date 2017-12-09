@@ -97,37 +97,37 @@ int main(int argc, char *argv[])
 		exit();
 	}
 
-	// else if(st1.type == T_DIR && st2.type == T_DIR){
-	// 	struct dirent de;
-	// 	close(o2);
-	// 	char buf[1024];
+	else if(st1.type == T_DIR && st2.type == T_DIR){
+		struct dirent de;
+		close(o2);
+		char *buf = (char*) malloc (1024 * sizeof char);
 
-	// 	if(strlen(awal) + 1 + DIRSIZ + 1 > sizeof buf){
-	// 		printf(1,"cp: path too long\n");
-	// 		exit();
-	// 	}
-	// 	strcpy(buf,awal);
-	// 	char *p = buf+strlen(buf);
-	// 	*p++ = '/';
-	// 	int cnt = 0;
-	// 	while(read(o1,&de,sizeof (de)) == sizeof (de)){
-	// 		if(de.inum == 0)continue;
-	// 		memmove(p,de.name,DIRSIZ);
-	// 		p[DIRSIZ] = 0;
-	// 		if(stat(buf,&st1) < 0){
-	// 			printf(2,"cp: cannot stat '%s'\n",buf);
-	// 			continue;
-	// 		}
+		if(strlen(awal) + 1 + DIRSIZ + 1 > sizeof buf){
+			printf(1,"cp: path too long\n");
+			exit();
+		}
+		strcpy(buf,awal);
+		char *p = buf+strlen(buf);
+		*p++ = '/';
+		int cnt = 0;
+		while(read(o1,&de,sizeof (de)) == sizeof (de)){
+			if(de.inum == 0)continue;
+			memmove(p,de.name,DIRSIZ);
+			p[DIRSIZ] = 0;
+			if(stat(buf,&st1) < 0){
+				printf(2,"cp: cannot stat '%s'\n",buf);
+				continue;
+			}
 
-	// 		cnt++;
-	// 		if(cnt <= 2)continue;
+			cnt++;
+			if(cnt <= 2)continue;
 
-	// 		char *new_dest = strcat_hehe(argv[argc-1],backname(buf));
-	// 		//printf(1,"%s %s\n",buf,new_dest);
-	// 		copyfiles(buf,new_dest);
-	// 	}
-	// 	close(o1);
-	// 	exit();
-	// }
+			char *new_dest = strcat_hehe(argv[argc-1],backname(buf));
+			//printf(1,"%s %s\n",buf,new_dest);
+			copyfiles(buf,new_dest);
+		}
+		close(o1);
+		exit();
+	}
 	exit();
 }
