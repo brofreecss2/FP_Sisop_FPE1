@@ -23,6 +23,13 @@ int main(int argc, char *argv[])
 			}
 			close(fd);
 		}
+		else{
+			int i;
+			for(i=1;i<argc;++i){
+				int fd = open(argv[i],O_CREATE | O_RDWR);
+				close(fd);
+			}
+		}
 	}
 
 	exit();
