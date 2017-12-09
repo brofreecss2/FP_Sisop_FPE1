@@ -18,8 +18,25 @@ char *backname(char *path){
 	return buf;
 }
 
+int strstr(char *needle, char *haystack){
+	int m = strlen(needle);
+	int n = strlen(haystack);
 
-void ls(char *path){
+	int i;
+	for(i=0;i<=n-m;i++){
+		int j;
+
+		for(j=0;j<m;++j){
+			if(haystack[i+j] != needle[j])break;
+		}
+
+		if(j==m)return 1;
+	}
+	return 0;
+}
+
+
+void ls(char *path, char *needle){
 	char buf[512];
 	struct dirent de;
 	struct stat st;
@@ -56,7 +73,8 @@ void ls(char *path){
 				continue;
 			}
 
-			printf(1,"%s %d %d %d\n",backname(buf),st.type,st.ino,st.size);
+			if(strstr(needle,backname(buf)))
+				printf(1,"%s %d %d %d\n",backname(buf),st.type,st.ino,st.size);
 		}
 	}
 	close(dir);
@@ -66,15 +84,15 @@ void ls(char *path){
 int main(int argc, char *argv[])
 {
 	if(argc == 1){
-		ls(".");
+		ls(".",argv[argc-1]);
 	}
 	else if(argc == 2){
-		ls(argv[1]);
+		ls(argv[1],argv[argc-1]);
 	}
 	else{
-		for(int i=1;i<argc;++i){
+		for(int i=1;i<argc-1;++i){
 			printf(1,"directory: %s\n",argv[i]);
-			ls(argv[i]);
+			ls(argv[i],argv[argc-1]);
 			if(i!=argc-1)printf(1,"\n");
 		}
 	}
