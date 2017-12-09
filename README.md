@@ -3,9 +3,9 @@
 - cd ✓
 - cp (parsial, kurang cp direktori)
 - env ✓
-- find
-- ls
+- find ✓
+- ls ✓
 - mv (parsial, kurang mv direktori)
-- rm
+- rm ✓
 - tee ✓
 - touch ✓
