@@ -83,11 +83,8 @@ void ls(char *path, char *needle){
 
 int main(int argc, char *argv[])
 {
-	if(argc == 1){
+	if(argc == 2){
 		ls(".",argv[argc-1]);
-	}
-	else if(argc == 3){
-		ls(argv[1],argv[2]);
 	}
 	else{
 		for(int i=1;i<argc-1;++i){
